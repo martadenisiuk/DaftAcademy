@@ -10,7 +10,7 @@ class Patient(BaseModel):
     surname: str
 
 app = FastAPI()
-app.counter: int = 0
+app.counter: int = 1
 
 @app.get("/")
 def root():
