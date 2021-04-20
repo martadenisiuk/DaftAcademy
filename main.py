@@ -40,9 +40,9 @@ def auth(password: str = '', password_hash: str = ''):
 
 @app.post("/register", status_code = 201)
 def show_data(patient: Patient):
-    len_string = len(re.sub('[^A-Za-z]+', '', patient.name + patient.surname))
-    resp = {"id": app.counter, "name": patient.name, "surname": patient.surname,
-            "register_date" : date.today(), "vaccination_date" : date.today() + timedelta(len_string)}
-    #app.storage[app.counter] = patient
-    app.counter += 1
-    return resp
+  len_string = len(''.join(filter(str.isalpha, patient.name + patient.surname)))
+  #len_string = len(re.sub('[^A-Za-z]+', '', patient.name + patient.surname))
+  resp = {"id": app.counter, "name": patient.name, "surname": patient.surname,
+          "register_date" : date.today(), "vaccination_date" : date.today() + timedelta(len_string)}
+  app.counter += 1
+  return resp
