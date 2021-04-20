@@ -1,12 +1,16 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 import hashlib
+import re
+  
+from datetime import date, timedelta
+
+class Patient(BaseModel):
+    name: str
+    surname: str
 
 app = FastAPI()
-
-class User(BaseModel):
-    password: str
-    password_hash: str
+app.counter: int = 0
 
 @app.get("/")
 def root():
@@ -33,3 +37,12 @@ def auth(password: str = '', password_hash: str = ''):
     except Exception:
         status_code = 401
     return Response(status_code=status_code)
+
+@app.post("/register", status_code = 201)
+def show_data(patient: Patient):
+    len_string = len(re.sub('[^A-Za-z]+', '', patient.name + patient.surname))
+    resp = {"id": app.counter, "name": patient.name, "surname": patient.surname,
+            "register_date" : date.today(), "vaccination_date" : date.today() + timedelta(len_string)}
+    #app.storage[app.counter] = patient
+    app.counter += 1
+    return resp
