@@ -6,6 +6,8 @@ import re
 from typing import Dict
 from datetime import date, timedelta
 
+from fastapi.templating import Jinja2Templates
+
 
 class Patient(BaseModel):
     name: str
@@ -59,3 +61,12 @@ def show_patient(id : int):
         return Response(status_code = 400)
     else:
         return Response(status_code = 404)
+      
+#### Lekcja 3 #####  
+
+templates = Jinja2Templates(directory="templates")
+@app.get("/jinja")
+def read_item(request: Request):
+    return templates.TemplateResponse("index.html.j2", {
+        "request": request, "my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]})
+
