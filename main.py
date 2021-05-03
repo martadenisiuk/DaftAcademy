@@ -96,7 +96,7 @@ def read_current_session(response : Response, username : str = Depends(get_curre
     if len(app.session_token) == 3:
         app.session_token.pop(0)
     app.session_token.append(token)
-    response.set_cookie(key="fakesession", value = token)
+    response.set_cookie(key="session_token", value = token)
     return {"username": username}
 
 @app.post("/login_token")
