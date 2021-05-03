@@ -90,16 +90,20 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     return credentials.username
 
 
-@app.post("/login_session",status_code = 201)
+@app.post("/login_session")
 def read_current_session(response : Response, username : str = Depends(get_current_username)):
     token = secrets.token_hex(32)
+    if len(app.session_token) == 3:
+        app.session_token.pop(0)
     app.session_token.append(token)
-    response.set_cookie(key="session_token", value = token)
+    response.set_cookie(key="fakesession", value = token)
     return {"username": username}
 
-@app.post("/login_token", status_code = 201)
+@app.post("/login_token")
 def read_current_token(response: Response,username: str = Depends(get_current_username)):
     token = secrets.token_hex(32)
+    if len(app.token) == 3:
+        app.token.pop(0)
     app.token.append(token)
     return {"token" : token}
   
