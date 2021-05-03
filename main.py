@@ -95,7 +95,6 @@ def read_current_session(response : Response, username : str = Depends(get_curre
     token = secrets.token_hex(32)
     app.session_token.append(token)
     response.set_cookie(key="session_token", value = token)
-    response.
     return {"username": username}
 
 @app.post("/login_token", status_code = 201)
