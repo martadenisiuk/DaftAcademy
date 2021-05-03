@@ -59,7 +59,8 @@ def show_patient(id : int):
     if id in app.storage:
         return app.storage.get(id)
     elif id < 1: 
-        return Response(status_code = 400)security = HTTPBasic()
+        return Response(status_code = 400)
+      
 
       
 #### Lekcja 3 #####  
