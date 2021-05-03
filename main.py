@@ -72,6 +72,7 @@ def hello():
     today_date = date.today().isoformat()
     content = "<h1>Hello! Today date is {}</h1>".format(today_date)
     return HTMLResponse(content=content)
+'''  
 security = HTTPBasic()
 
 
@@ -102,4 +103,4 @@ def read_current_token(response: Response,username: str = Depends(get_current_us
     app.token.append(token)
     return {"token" : token}
 
-
+'''
