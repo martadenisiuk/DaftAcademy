@@ -132,13 +132,13 @@ def welcome_token(response : Response, token : str = '', format : str = ''):
         return PlainTextResponse('Welcome!')
 
 @app.delete('/logout_session')
-def logout_session(response: Response, session_token: str= '', format : str = '' ):
+def logout_session(response: Response, session_token = Cookie(None), format : str = '' ):
     if session_token not in app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
     app.session_token.remove(session_token)
-    return RedirectResponse(f'/logged_out?format={format}', status_code=302)
+    return RedirectResponse(f'/logged_out?format={format}', status_code=303)
     
 @app.delete('/logout_token')
 def logout_token(response: Response, token: str= '', format : str = '' ):
@@ -147,7 +147,7 @@ def logout_token(response: Response, token: str= '', format : str = '' ):
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
     app.token.remove(token)
-    return RedirectResponse(f'/logged_out?format={format}', status_code=302)
+    return RedirectResponse(f'/logged_out?format={format}', status_code=303)
 
 
 @app.get('/logged_out')
@@ -159,4 +159,5 @@ def  logged_out(response : Response, format : str =''):
         return HTMLResponse(content = content)
     else:
         return PlainTextResponse('Logged out!')    
+    
     
