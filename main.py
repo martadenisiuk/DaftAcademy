@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, status, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import hashlib
 import re
+import secrets
   
 from typing import Dict
 from datetime import date, timedelta
@@ -70,3 +71,33 @@ def hello():
     today_date = date.today().isoformat()
     content = "<h1>Hello! Today date is {}</h1>".format(today_date)
     return HTMLResponse(content=content)
+
+security = HTTPBasic()
+
+
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
+
+@app.post("/login_session")
+def read_current_session(response : Response, username : str = Depends(get_current_username)):
+    app.session_token = []
+    token = secrets.token_hex(32)
+    app.session_token.append(token)
+    response.set_cookie(key="fakesession", value = token)
+    return {"username": username}
+
+@app.post("/login_token")
+def read_current_token(response: Response,username: str = Depends(get_current_username)):
+    token = secrets.token_hex(32)
+    app.token = []
+    app.token.append(token)
+    return {"token" : token}
