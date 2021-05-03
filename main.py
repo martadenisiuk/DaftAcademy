@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Request, Response, status, HTTPException, Depends
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, Response, status, HTTPException, Depends, Cookie
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from pydantic import BaseModel
 import hashlib
 import re
@@ -12,7 +12,6 @@ from datetime import date, timedelta
 
 from fastapi.templating import Jinja2Templates
 
-
 class Patient(BaseModel):
     name: str
     surname: str
@@ -20,6 +19,8 @@ class Patient(BaseModel):
 app = FastAPI()
 app.counter: int = 1
 app.storage: Dict[int, Patient] = {}
+app.session_token = []
+app.token = []
 
 @app.get("/")
 def root():
@@ -91,7 +92,6 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
 
 @app.post("/login_session",status_code = 201)
 def read_current_session(response : Response, username : str = Depends(get_current_username)):
-    app.session_token = []
     token = secrets.token_hex(32)
     app.session_token.append(token)
     response.set_cookie(key="session_token", value = token)
@@ -100,6 +100,35 @@ def read_current_session(response : Response, username : str = Depends(get_curre
 @app.post("/login_token", status_code = 201)
 def read_current_token(response: Response,username: str = Depends(get_current_username)):
     token = secrets.token_hex(32)
-    app.token = []
     app.token.append(token)
     return {"token" : token}
+  
+@app.get('/welcome_session')
+def welcome_sessin(format : str, session_token = Cookie(None)):
+    if session_token not in app.session_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    else:
+        if format == 'json':
+            return {"message": "Welcome!"}
+        elif format == 'html':
+            content = '<h1>Welcome!</h1>'
+            return HTMLResponse(content = content)
+        else:
+            return PlainTextResponse('Welcome!')
+
+@app.get('/welcome_token')
+def welcome_sessin(format : str, token : str):
+    if token not in app.token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    else:
+        if format == 'json':
+            return {"message": "Welcome!"}
+        elif format == 'html':
+            content = '<h1>Welcome!</h1>'
+            return HTMLResponse(content = content)
+        else:
+            return PlainTextResponse('Welcome!')
