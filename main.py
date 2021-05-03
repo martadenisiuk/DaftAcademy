@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Response, status, HTTPException, Depends, Cookie
-from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel
 import hashlib
 import re
@@ -130,3 +130,33 @@ def welcome_token(response : Response, token : str = '', format : str = ''):
         return HTMLResponse(content = content)
     else:
         return PlainTextResponse('Welcome!')
+
+@app.delete('/logout_session')
+def logout_session(response: Response, session_token: str= '', format : str = '' ):
+    if session_token not in app.session_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    app.session_token.remove(session_token)
+    return RedirectResponse(f'/logged_out?format={format}', status_code=302)
+    
+@app.delete('/logout_token')
+def logout_token(response: Response, token: str= '', format : str = '' ):
+    if token not in app.token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    app.token.remove(token)
+    return RedirectResponse(f'/logged_out?format={format}', status_code=302)
+
+
+@app.get('/logged_out')
+def  logged_out(format : str =''):
+    if format == 'json':
+        return JSONResponse(content={"message": "Logged out!"})
+    elif format == 'html':
+        content = '<h1>Logged out!</h1>'
+        return HTMLResponse(content = content)
+    else:
+        return PlainTextResponse('Logged out!')    
+    
