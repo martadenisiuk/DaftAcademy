@@ -151,7 +151,7 @@ def logout_token(response: Response, token: str= '', format : str = '' ):
 
 
 @app.get('/logged_out')
-def  logged_out(format : str =''):
+def  logged_out(response : Response, format : str =''):
     if format == 'json':
         return JSONResponse(content={"message": "Logged out!"})
     elif format == 'html':
