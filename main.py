@@ -103,8 +103,8 @@ def read_current_token(response: Response,username: str = Depends(get_current_us
     app.token.append(token)
     return {"token" : token}
   
-@app.get('/welcome_session')
-def welcome_sessin(format : str, session_token = Cookie(None)):
+@app.get('/welcome_session', status_code = 200)
+def welcome_session(format : str, session_token = Cookie(None)):
     if session_token not in app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -118,8 +118,8 @@ def welcome_sessin(format : str, session_token = Cookie(None)):
         else:
             return PlainTextResponse('Welcome!')
 
-@app.get('/welcome_token')
-def welcome_sessin(format : str, token : str):
+@app.get('/welcome_token', status_code = 200)
+def welcome_token(format : str, token : str):
     if token not in app.token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
