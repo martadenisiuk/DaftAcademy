@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, Response, status
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import hashlib
 import re
@@ -64,9 +65,9 @@ def show_patient(id : int):
       
 #### Lekcja 3 #####  
 
-templates = Jinja2Templates(directory="templates")
-@app.get("/jinja")
-def read_item(request: Request):
-    return templates.TemplateResponse("index.html.j2", {
-        "request": request, "my_string": "Wheeeee!", "my_list": [0, 1, 2, 3, 4, 5]})
+@app.get("/hello")
+async def hello():
+    today_date = date.today().isoformat()
+    content = "<h1>Hello! Today date is {}</h1>".format(today_date)
+    return HTMLResponse(content=content)
 
