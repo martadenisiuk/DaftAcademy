@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Response, status, HTTPException, Depends, Cookie
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse
 from pydantic import BaseModel
 import hashlib
 import re
@@ -103,32 +103,30 @@ def read_current_token(response: Response,username: str = Depends(get_current_us
     app.token.append(token)
     return {"token" : token}
   
-@app.get('/welcome_session', status_code = 200)
-def welcome_session(format : str, session_token = Cookie(None)):
+@app.get('/welcome_session')
+def welcome_session(response : Response, session_token = Cookie(None), format : str = ''):
     if session_token not in app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
+    if format == 'json':
+        return JSONResponse(content={"message": "Welcome!"})
+    elif format == 'html':
+        content = '<h1>Welcome!</h1>'
+        return HTMLResponse(content = content)
     else:
-        if format == 'json':
-            return {"message": "Welcome!"}
-        elif format == 'html':
-            content = '<h1>Welcome!</h1>'
-            return HTMLResponse(content = content)
-        else:
-            return PlainTextResponse('Welcome!')
+        return PlainTextResponse('Welcome!')
 
-@app.get('/welcome_token', status_code = 200)
-def welcome_token(format : str, token : str):
+@app.get('/welcome_token')
+def welcome_token(response : Response, token : str = '', format : str = ''):
     if token not in app.token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
+    if format == 'json':
+        return JSONResponse(content={"message": "Welcome!"})
+    elif format == 'html':
+        content = '<h1>Welcome!</h1>'
+        return HTMLResponse(content = content)
     else:
-        if format == 'json':
-            return {"message": "Welcome!"}
-        elif format == 'html':
-            content = '<h1>Welcome!</h1>'
-            return HTMLResponse(content = content)
-        else:
-            return PlainTextResponse('Welcome!')
+        return PlainTextResponse('Welcome!')
