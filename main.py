@@ -4,6 +4,8 @@ from pydantic import BaseModel
 import hashlib
 import re
 import secrets
+
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
   
 from typing import Dict
 from datetime import date, timedelta
