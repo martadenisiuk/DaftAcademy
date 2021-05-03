@@ -84,7 +84,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    return credentials.username, credentials.password
+    return credentials.username
 
 
 @app.post("/login_session")
