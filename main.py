@@ -45,24 +45,39 @@ async def customers():
 
 
 ###### Zadanie 2 ##########
-
 '''
 @app.get('/products/{id}')
 async def  products(id : int):
     app.db_connection.row_factory = sqlite3.Row
     try:
-        products = app.db_connection.execute(f'''SELECT ProductID id, ProductName name FROM Products WHERE id = {id}''' ).fetchone()
+        products = app.db_connection.execute(f"SELECT ProductID id, ProductName name FROM Products WHERE id = {id}" ).fetchone()
         return products
     except Exception:
         status_code = 404
-        return Response(status_code=status_code)'''
+        return Response(status_code=status_code)
                       
 @app.get('/products/{id}')
 async def  products(id : int):
     app.db_connection.row_factory = sqlite3.Row
-    products = app.db_connection.execute(f'''SELECT ProductID id, ProductName name FROM Products WHERE id = {id}''' ).fetchone()
+    products = app.db_connection.execute(f"SELECT ProductID id, ProductName name FROM Products WHERE id = {id}" ).fetchone()
     if products is not None:
         return products
     else:
+        raise HTTPException(status_code=404) '''
+                      
+@app.get('/products/{id}')
+async def  products(id : int):
+    try:
+        app.db_connection.row_factory = sqlite3.Row
+        products = app.db_connection.execute(f'''SELECT ProductID id, ProductName name FROM Products WHERE id = {id}''' ).fetchone()
+        if products is not None:
+            Response(status_code = 200)
+            return products
+        else:
+            raise HTTPException(status_code = 404)
+    except Exception:
         raise HTTPException(status_code=404)                      
+                      
+                      
+                     
                       
