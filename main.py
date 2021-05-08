@@ -1,6 +1,8 @@
 from fastapi import FastAPI
-app = FastAPI()
+import uvicorn
 import sqlite3
+
+app = FastAPI()
 
 @app.on_event("startup")
 async def startup():
