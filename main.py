@@ -50,9 +50,9 @@ async def customers():
 @app.get('/products/{id}')
 async def  products(id : int):
     app.db_connection.row_factory = sqlite3.Row
-    products = app.db_connection.execute(f'''SELECT ProductID id, ProductName name FROM Products WHERE id = {id}''' ).fetchall()
     try:
+        products = app.db_connection.execute(f'''SELECT ProductID id, ProductName name FROM Products WHERE id = {id}''' ).fetchone()
         return products
     except Exception:
         status_code = 404
-    return Response(status_code=status_code)
+        return Response(status_code=status_code)
