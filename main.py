@@ -4,6 +4,13 @@ import sqlite3
 
 app = FastAPI()
 
+with sqlite3.connect("northwind.db") as connection:
+    connection.text_factory = lambda b: b.decode(errors="ignore")
+    cursor = connection.cursor()
+    products = cursor.execute("SELECT ProductName FROM Products").fetchall()
+    print(len(products))
+    print(products[4])
+
 @app.on_event("startup")
 async def startup():
     app.db_connection = sqlite3.connect("northwind.db")
