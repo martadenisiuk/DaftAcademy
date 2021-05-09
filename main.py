@@ -78,6 +78,16 @@ async def  products(id : int):
     except Exception:
         raise HTTPException(status_code=404)                      
                       
-                      
+###### Zadanie 3 ##########
+variables = {'first_name', 'last_name', 'city'}
+
+@app.get('/employees')
+async def employees(limit : int, offset : int, order : str):
+    if order not in variables:
+        raise HTTPException(status_code = 400)
+    app.db_connection.row_factory = sqlite3.Row
+    employees = app.db_connection.execute(f'SELECT EmployeeID id, LastName last_name, FirstName first_name,\
+                                          City city FROM Employees ORDER BY {order} LIMIT {limit} OFFSET {offset}').fetchall()
+    return {'employees' : [x for x in employees]}                      
                      
                       
