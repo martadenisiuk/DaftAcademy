@@ -102,4 +102,26 @@ async def products_extended():
                                                   FROM ((Products INNER JOIN Categories ON Categories.CategoryID = 
                                                          Products.CategoryID) INNER JOIN Suppliers ON 
                                                         Suppliers.SupplierID = Products.SupplierID)''').fetchall()
-    return {'products_extended' : products_extended}         
+    return {'products_extended' : products_extended}        
+                      
+                      
+####### Zadanie 5 #########
+
+@app.get('/products/{id}/orders')
+async def product_orders(id : int):
+    try:
+        app.db_connection.row_factory = sqlite3.Row
+        product_orders = app.db_connection.execute(f"""SELECT Orders.OrderID id, Customers.CompanyName customer,
+                                                   OD.Quantity quantity, 
+                                                   ROUND((OD.UnitPrice* OD.Quantity) - (OD.Discount * (OD.UnitPrice * 
+                                                                                                  OD.Quantity)),2) total_price
+                                                   FROM ((Orders JOIN "Order Details" OD ON OD.OrderID = Orders.OrderID)
+                                                         JOIN Customers ON Customers.CustomerID = Orders.CustomerID)
+                                                   WHERE OD.ProductID = {id} ORDER BY id""").fetchall()
+        if product_orders is not None:
+            Response(status_code = 200)
+            return {'orders' : product_orders}
+        else:
+            raise HTTPException(status_code = 404)
+    except Exception:
+        raise HTTPException(status_code=404)    
