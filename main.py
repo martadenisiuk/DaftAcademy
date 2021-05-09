@@ -147,7 +147,7 @@ async def categories_post(category : Category):
 async def categories_id(category : Category, id : int):
     app.db_connection.execute(
         "UPDATE Categories SET CategoryName = ? WHERE CategoryID = ?", (
-            category.name, id)
+            category.name, id, )
     )
     app.db_connection.commit()
     app.db_connection.row_factory = sqlite3.Row
