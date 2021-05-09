@@ -166,5 +166,5 @@ async def categories_delete(id : int):
     )
     app.db_connection.commit()
     if cursor.rowcount:
-        return {"deleted": cursor.rowcount}
+        return {"deleted": 1}
     raise HTTPException(status_code = 404)
