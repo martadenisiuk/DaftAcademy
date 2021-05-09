@@ -141,7 +141,7 @@ async def categories_post(category : Category):
     app.db_connection.row_factory = sqlite3.Row
     categories = app.db_connection.execute(
         """SELECT CategoryID id, CategoryName name FROM Categories WHERE CategoryID = ?""",(new_categories_id, )).fetchone()
-    return {'id' : int(new_categories_id) , name : category.name}
+    return categories
 
 @app.put('/categories/{id}', status_code = 200)
 async def categories_id(category : Category, id : int):
