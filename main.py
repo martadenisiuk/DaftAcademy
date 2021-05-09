@@ -141,7 +141,7 @@ async def categories_post(category : Category):
     app.db_connection.row_factory = sqlite3.Row
     categories = app.db_connection.execute(
         """SELECT CategoryID id, CategoryName name FROM Categories WHERE CategoryID = ?""",(new_categories_id, )).fetchone()
-    return categories 
+    return {'id' : int(new_categories_id) , name : category.name}
 
 @app.put('/categories/{id}', status_code = 200)
 async def categories_id(category : Category, id : int):
@@ -156,7 +156,7 @@ async def categories_id(category : Category, id : int):
         (id, )).fetchone()
     if data is None:
         raise HTTPException(status_code = 404)
-    return data
+    return {'id' : id, data['name']}
 
 
 @app.delete('/categories/{id}', status_code = 200)
