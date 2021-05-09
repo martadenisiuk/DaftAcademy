@@ -118,7 +118,7 @@ async def product_orders(id : int):
                                                    FROM ((Orders JOIN "Order Details" OD ON OD.OrderID = Orders.OrderID)
                                                          JOIN Customers ON Customers.CustomerID = Orders.CustomerID)
                                                    WHERE OD.ProductID = {id} ORDER BY id""").fetchall()
-        if product_orders is not None:
+        if len(product_orders) != 0 :
             Response(status_code = 200)
             return {'orders' : product_orders}
         else:
