@@ -129,8 +129,8 @@ async def product_orders(id : int):
                       
  
 ########## Zadanie 6 ########
-
 class Category(BaseModel):
+
     name : str
 
 @app.post('/categories', status_code = 201)
@@ -141,16 +141,15 @@ async def categories_post(category : Category):
     app.db_connection.row_factory = sqlite3.Row
     categories = app.db_connection.execute(
         """SELECT CategoryID id, CategoryName name FROM Categories WHERE CategoryID = ?""",(new_categories_id, )).fetchone()
-    return {'id' : new_categories_id, 'name' : category.name}    
+    return categories 
 
 @app.put('/categories/{id}', status_code = 200)
-async def categories_id(id : int, category : Category):
-    cursor = app.db_connection.execute(
+async def categories_id(category : Category, id : int):
+    app.db_connection.execute(
         "UPDATE Categories SET CategoryName = ? WHERE CategoryID = ?", (
             category.name, id)
     )
     app.db_connection.commit()
-
     app.db_connection.row_factory = sqlite3.Row
     data = app.db_connection.execute(
         """SELECT CategoryID id, CategoryName name FROM Categories WHERE CategoryID = ?""",
@@ -159,12 +158,13 @@ async def categories_id(id : int, category : Category):
         raise HTTPException(status_code = 404)
     return data
 
+
 @app.delete('/categories/{id}', status_code = 200)
 async def categories_delete(id : int):
     cursor = app.db_connection.execute(
         "DELETE FROM Categories WHERE CategoryID = ?", (id, )
     )
     app.db_connection.commit()
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code = 404)
-    return {"deleted": cursor.rowcount}
+    if cursor.rowcount:
+        return {"deleted": cursor.rowcount}
+    raise HTTPException(status_code = 404)
