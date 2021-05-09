@@ -101,4 +101,5 @@ async def products_extended():
                                                   Categories.CategoryName category, Suppliers.CompanyName supplier 
                                                   FROM ((Products INNER JOIN Categories ON Categories.CategoryID = 
                                                          Products.CategoryID) INNER JOIN Suppliers ON 
-                                                        Suppliers.SupplierID = Products.SupplierID)''').fetchall()                     
+                                                        Suppliers.SupplierID = Products.SupplierID)''').fetchall()
+    return {'products_extended' : products_extended}         
