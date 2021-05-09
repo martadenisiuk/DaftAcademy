@@ -129,7 +129,6 @@ async def product_orders(id : int):
 ########## Zadanie 6 ########
 
 class Category(BaseModel):
-
     name : str
 
 @app.post('/categories', status_code = 201)
@@ -157,7 +156,6 @@ async def categories_id(id : int, category : Category):
     if data is None:
         raise HTTPException(status_code = 404)
     return data
-
 
 @app.delete('/categories/{id}', status_code = 200)
 async def categories_delete(id : int):
