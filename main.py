@@ -156,7 +156,7 @@ async def categories_id(category : Category, id : int):
         (id, )).fetchone()
     if data is None:
         raise HTTPException(status_code = 404)
-    return {'id' : id, data['name']}
+    return data
 
 
 @app.delete('/categories/{id}', status_code = 200)
