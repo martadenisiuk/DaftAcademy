@@ -92,4 +92,13 @@ async def employees(limit : Optional[int] = -1, offset : Optional[int] = 0, orde
                                           City city FROM Employees ORDER BY {order} LIMIT {limit} OFFSET {offset}').fetchall()
     return {'employees' : employees}                
                      
-                      
+###### Zadanie 4 ########
+
+@app.get('/products_extended')
+async def products_extended():
+    app.db_connection.row_factory = sqlite3.Row
+    products_extended = app.db_connection.execute('''SELECT Products.ProductID id, Products.ProductName name, 
+                                                  Categories.CategoryName category, Suppliers.CompanyName supplier 
+                                                  FROM ((Products INNER JOIN Categories ON Categories.CategoryID = 
+                                                         Products.CategoryID) INNER JOIN Suppliers ON 
+                                                        Suppliers.SupplierID = Products.SupplierID)''').fetchall()                     
