@@ -30,20 +30,19 @@ async def shutdown():
 @app.get("/categories")
 async def categories():
     app.db_connection.row_factory = sqlite3.Row
-    categories = app.db_connection.execute('SELECT CategoryID, CategoryName FROM Categories ORDER BY CategoryID').fetchall()
+    categories = app.db_connection.execute('SELECT CategoryID id , CategoryName name FROM Categories ORDER BY CategoryID').fetchall()
     return {
-        "categories": [{'id': f"{x['CategoryID']}", 'name':f"{x['CategoryName']}"} for x in categories]
+        "categories": categories
     }
 
 @app.get("/customers")
 async def customers():
     app.db_connection.row_factory = sqlite3.Row
-    customers = app.db_connection.execute('''SELECT CustomerID, CompanyName, COALESCE(Address, '') || ' ' ||
+    customers = app.db_connection.execute('''SELECT CustomerID id, CompanyName name , COALESCE(Address, '') || ' ' ||
                                           COALESCE(PostalCode, '')|| ' ' || COALESCE(City,'') || ' ' || COALESCE(Country,'') 
-                                          AS address FROM Customers ORDER BY UPPER(CustomerID)''').fetchall()
+                                          AS full_address FROM Customers ORDER BY UPPER(CustomerID)''').fetchall()
     return {
-        "customers": [{'id': f"{x['CustomerID']}", 'name' : f"{x['CompanyName']}", 'full_address': f"{x['address']}"}  
-                      for x in customers]
+        "customers": customers
     }
 
 
