@@ -44,12 +44,12 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Supplier not found")
     db_products = crud.get_product(db, id)        
     return [{
-        'ProductID' : product.Product.ProductID,
-        'ProductName' : product.Product.ProductName,
+        'ProductID' : product.ProductID,
+        'ProductName' : product.ProductName,
         'Category' : {
-            'CategoryID' : product.Category.CategoryID,
-            'CategoryName' : product.Category.CategoryName},
-        'Discontinued' : product.Product.Discontinued}
+            'CategoryID' : product.CategoryID,
+            'CategoryName' : product.CategoryName},
+        'Discontinued' : product.Discontinued}
         for product in db_products]
 
         
