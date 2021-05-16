@@ -26,7 +26,7 @@ def get_product(db: Session, id: int):
         db.query(models.Product.ProductID, models.Product.ProductName,
                     models.Category.CategoryID, models.Category.CategoryName, 
                  models.Product.Discontinued).
-        join(models.Category.CategoryID == models.Product.CategoryID).
+        join(model.Category, models.Category.CategoryID == models.Product.CategoryID).
         filter(models.Product.SupplierID == id).
         order_by(models.Product.ProductID.desc()).all()
     )
