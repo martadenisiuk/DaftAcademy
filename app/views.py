@@ -61,10 +61,7 @@ async def get_products(response:Response, id: PositiveInt, db: Session = Depends
             'CategoryName' : product.CategoryName},
         'Discontinued' : product.Discontinued}
         for product in db_products]
-    try:
-        return data
-    except:
-        raise HTTPException(status_code = 404, detail='Supplier not found')
+    return data
         
 
 
