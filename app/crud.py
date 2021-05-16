@@ -59,7 +59,7 @@ def create_supplier(db: Session, supplier: schemas.Add_Supplier):
 
 
 def put_supplier(db:Session, id : int, supplier: schemas.PutSupplier):
-    put_supplier = {col: val for col, val in dict(supplier).items() if val is not None}
+    put_supplier = {col: val for col, val in dict(supplier).items() if val is not 'string'}
     if put_supplier:
         db.query(models.Supplier).filter(models.Supplier.SupplierID == id).update(values=put_supplier)
         db.commit()
