@@ -58,8 +58,8 @@ def create_supplier(db: Session, supplier: schemas.Add_Supplier):
 
 
 def put_supplier(db:Session, id : int, supplier: schemas.PutSupplier):
-    update_supplier = {col: val for col, val in dict(supplier).items() if val is not None}
-    if update_supplier:
-        db.query(models.Supplier).filter(models.Supplier.SupplierID == id).update(values=update_supplier)
+    update_supplier = {col: val for col, val in supplier.dict(exclude={'id'}).items() if val is not None}
+    if update_supplier != {}:
+        db.execute(update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).values(**update_supplier))
         db.commit()
-        pass   
+        pass
