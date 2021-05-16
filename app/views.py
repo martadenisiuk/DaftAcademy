@@ -52,7 +52,7 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
         'Discontinued' : product.Discontinued}
         for product in db_products]
 
-@router.post("/suppliers", response_model=schemas.Supplier, status_code=201)
+@router.post("/suppliers", response_model=schemas.ResSupplier, status_code=201)
 async def create_supplier(add_supplier: schemas.Add_Supplier, db: Session = Depends(get_db)):
     supplier = models.Supplier()
     supplier.CompanyName = add_supplier.CompanyName
