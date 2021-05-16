@@ -29,3 +29,6 @@ class Suppliers(BaseModel):
     Phone: constr(max_length=24)
     Fax: constr(max_length=24)
     HomePage: str
+        
+    class Config:
+        orm_mode = True
