@@ -62,8 +62,9 @@ async def create_supplier(supplier: schemas.Add_Supplier, db: Session = Depends(
 
 @router.put('/suppliers{id}', response_model=schemas.PutSupplier, status_code=200)
 async def put_supplier(id:PositiveInt,supplier: schemas.PutSupplier, db: Session = Depends(get_db)):
-    if crud.get_supplier(db, id) is None:
-        raise HTTPException(status_code=401, detail="Supplier not found")    
+    get_supplier = crud.get_supplier(db, id)
+    if get_supplier is None:
+        raise HTTPException(status_code=404, detail="Supplier not found")    
     crud.put_supplier(db, id, supplier)
     return crud.get_supplier(db, id)
 
