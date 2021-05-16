@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from . import crud, schemas
 from .database import get_db
 
+import requests
+
 router = APIRouter()
 
 
@@ -51,9 +53,9 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
         for product in db_products]'''
 
 @router.get('/suppliers/{id}/products')
-async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
+async def get_products(response:Response, id: PositiveInt, db: Session = Depends(get_db)):
     db_products = crud.get_product(db, id)
-    if db_products:
+    try:
         data = [{
             'ProductID' : product.ProductID,
             'ProductName' : product.ProductName,
@@ -62,8 +64,9 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
                 'CategoryName' : product.CategoryName},
             'Discontinued' : product.Discontinued}
             for product in db_products]
+            response.raise_for_status()
         return len(data)
-    else:
+    requests.exceptions.HTTPError:
         raise HTTPException(status_code = 404, detail='Supplier not found')
         
 
