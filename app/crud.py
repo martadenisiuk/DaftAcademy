@@ -23,8 +23,8 @@ def get_supplier(db: Session, id: int):
 
 def get_product(db: Session, id: int):
     return (
-        db.query(models.Product, model.Category).
+        db.query(models.Product, models.Category).
         filter(models.Product.SupplierID == id).
-        filter(model.Category.CategoryID == model.Product.CategoryID).
-        order_by(model.Product.ProductID.desc()).all()
+        filter(models.Category.CategoryID == models.Product.CategoryID).
+        order_by(models.Product.ProductID.desc()).all()
     )
