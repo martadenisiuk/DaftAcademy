@@ -20,3 +20,11 @@ def get_supplier(db: Session, supplier_id: int):
     return (
         db.query(models.Supplier).filter(models.Supplier.SupplierID == supplier_id).first()
     )
+
+def get_product(db: Session, id: int):
+    return (
+        db.query(models.Product, model.Category).
+        filter(models.Product.SupplierID == id).
+        filter(model.Category.CategoryID == model.Product.CategoryID).
+        order_by(model.Product.ProductID.desc()).all()
+    )
