@@ -51,6 +51,4 @@ def create_supplier(db: Session, supplier: schemas.Add_Supplier):
     )
     db.add(db_supplier)
     db.commit()
-    db.refresh(db_supplier)
-    return db_supplier
     pass
