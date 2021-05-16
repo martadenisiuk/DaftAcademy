@@ -52,10 +52,8 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
 
 @router.get('/suppliers/{id}/products')
 async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
+    db_products = crud.get_product(db, id)
     try:
-        db_products = crud.get_product(db, id)
-        if len(db_products.Product.Discontinued) == 0:
-            raise HTTPException(status_code = 404, detail='Supplier not found')
         return [{
             'ProductID' : product.Product.ProductID,
             'ProductName' : product.Product.ProductName,
@@ -64,8 +62,10 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
                 'CategoryName' : product.Category.CategoryName},
             'Discontinued' : product.Product.Discontinued}
             for product in db_products]
-    except Exception:
-        raise HTTPException(status_code=404, detail="Supplier not found")
+    except HTTPException:
+        raise HTTPException(status_code = 404, detail='Supplier not found')
+        
+
 
 
 
