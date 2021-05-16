@@ -1,13 +1,11 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import PositiveInt
 from sqlalchemy.orm import Session
 
 from . import crud, schemas
 from .database import get_db
-
-import requests
 
 router = APIRouter()
 
@@ -55,18 +53,17 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
 @router.get('/suppliers/{id}/products')
 async def get_products(response:Response, id: PositiveInt, db: Session = Depends(get_db)):
     db_products = crud.get_product(db, id)
+    data = [{
+        'ProductID' : product.ProductID,
+        'ProductName' : product.ProductName,
+        'Category' : {
+            'CategoryID' : product.CategoryID,
+            'CategoryName' : product.CategoryName},
+        'Discontinued' : product.Discontinued}
+        for product in db_products]
     try:
-        data = [{
-            'ProductID' : product.ProductID,
-            'ProductName' : product.ProductName,
-            'Category' : {
-                'CategoryID' : product.CategoryID,
-                'CategoryName' : product.CategoryName},
-            'Discontinued' : product.Discontinued}
-            for product in db_products]
-            response.raise_for_status()
-        return len(data)
-    requests.exceptions.HTTPError:
+        return data
+    except:
         raise HTTPException(status_code = 404, detail='Supplier not found')
         
 
