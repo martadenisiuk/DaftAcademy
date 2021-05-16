@@ -54,7 +54,7 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
 async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
     try:
         db_products = crud.get_product(db, id)
-        if len(db_products) == 0:
+        if len(db_products.Product.Discontinued) == 0:
             raise HTTPException(status_code = 404, detail='Supplier not found')
         return [{
             'ProductID' : product.Product.ProductID,
