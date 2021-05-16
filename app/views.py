@@ -53,7 +53,7 @@ async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
 @router.get('/suppliers/{id}/products')
 async def get_products(id: PositiveInt, db: Session = Depends(get_db)):
     db_products = crud.get_product(db, id)
-    if db_products is None:
+    if db_products not:
         raise HTTPException(status_code=404, detail="Supplier not found")
     return [{
         'ProductID' : product.Product.ProductID,
