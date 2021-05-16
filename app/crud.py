@@ -20,7 +20,7 @@ def get_supplier(db: Session, id: int):
     return (
         db.query(models.Supplier).filter(models.Supplier.SupplierID == id).first()
     )
-
+'''
 def get_product(db: Session, id: int):
     return (
         db.query(models.Product.ProductID, models.Product.ProductName,
@@ -29,4 +29,12 @@ def get_product(db: Session, id: int):
         join(models.Category, models.Category.CategoryID == models.Product.CategoryID).
         filter(models.Product.SupplierID == id).
         order_by(models.Product.ProductID.desc()).all()
+    )'''
+def get_product(db: Session, id: int):
+    return (
+        db.query(models.Product, models.Category, models.Supplier).
+        filter(models.Product.SupplierID == id).
+        filter(models.Category.CategoryID == models.Product.CategoryID).
+        order_by(models.Product.ProductID.desc()).all()
     )
+
