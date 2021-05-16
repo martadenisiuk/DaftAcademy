@@ -35,6 +35,6 @@ def get_product(db: Session, id: int):
                     models.Product.Discontinued,
                     ).
         join(models.Category, models.Product.CategoryID == models.Category.CategoryID).
-        filter(models.Product.SupplierID == supplier_id).
+        filter(models.Product.SupplierID == id).
         order_by(models.Product.ProductID.desc()).all()
         )
