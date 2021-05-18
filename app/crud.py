@@ -40,15 +40,15 @@ def get_product(db: Session, id: int):
 def create_supplier(db: Session, supplier: schemas.Add_Supplier):
     id = db.query(models.Supplier).count() + 1
     db_supplier = models.Supplier(
-        SupplierID= id,
-        CompanyName=supplier.CompanyName,
-        ContactName=supplier.ContactName,
-        ContactTitle=supplier.ContactTitle,
-        Address=supplier.Address,
-        City=supplier.City,
-        PostalCode=supplier.PostalCode,
-        Country=supplier.Country,
-        Phone=supplier.Phone
+        SupplierID = id,
+        CompanyName = supplier.CompanyName,
+        ContactName = supplier.ContactName,
+        ContactTitle = supplier.ContactTitle,
+        Address = supplier.Address,
+        City = supplier.City,
+        PostalCode = supplier.PostalCode,
+        Country = supplier.Country,
+        Phone = supplier.Phone
     )
     db.add(db_supplier)
     db.commit()
